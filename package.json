@@ -1,0 +1,23 @@
+{
+  "name": "youtube-downloader-api",
+  "version": "1.0.0",
+  "description": "Simple YouTube Downloader API that allows videos or audio to be downloaded from the youtube website.",
+  "main": "src/index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/express": "^4.17.17",
+    "@types/fluent-ffmpeg": "^2.1.21",
+    "typescript": "^5.0.3"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "ffmpeg-static": "^5.1.0",
+    "fluent-ffmpeg": "^2.1.2",
+    "ytdl-core": "^4.11.3"
+  }
+}
