@@ -1,7 +1,7 @@
 import router from './router';
 import ytdl from 'ytdl-core';
 
-type videoData = {resolution: string, format: string, mime: string | undefined, bitrate: number | undefined, audioBitrate: number | undefined, fps: number | undefined, itag: number, size: string};
+type videoData = {resolution: string, format: string, mime: string | undefined, bitrate: number | undefined, hasAudio: boolean, audioBitrate: number | undefined, fps: number | undefined, itag: number, size: string};
 type audioData = {bitrate: number | undefined, format: string, itag: number, codec: string | undefined, size: string};
 type videoResult = {title: string, author: string, authorUrl: string, duration: string, thumbnail: string, videoContainer: videoData[], audioContainer: audioData[]}
 
@@ -30,7 +30,12 @@ router.get('/search', async (req, res) => {
     const videoContainer: videoData[] = [];
     const audioContainer: audioData[] = [];
     for (let video of videoWithAudio) {
-        videoContainer.push({ resolution: video.qualityLabel, format: video.container, mime: video.mimeType, bitrate: video.bitrate, audioBitrate: video.audioBitrate, fps: video.fps, itag: video.itag, size: video.contentLength})
+        let audio: boolean = video.hasAudio;
+        if (video.container === 'mp4') {
+            audio = true;
+        }
+
+        videoContainer.push({ resolution: video.qualityLabel, format: video.container, mime: video.mimeType, bitrate: video.bitrate, hasAudio: audio, audioBitrate: video.audioBitrate, fps: video.fps, itag: video.itag, size: video.contentLength})
     }
     for (let audio of audioOnly) {
         audioContainer.push({bitrate: audio.audioBitrate, format: audio.container, itag: audio.itag, codec: audio.audioCodec, size: audio.contentLength})
