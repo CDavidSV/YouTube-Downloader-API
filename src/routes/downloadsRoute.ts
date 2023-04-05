@@ -12,10 +12,9 @@ fluent.setFfmpegPath(ffmpegPath);
 
 /**
  * Merges video and audio streams.
- * @param video Readable video stream
- * @param audio Readable audio stream
- * @param title Video Title
- * @returns merged video stream
+ * @param videoStream Readable video stream
+ * @param audioStream Readable audio stream
+ * @returns merged video and audio stream
  */
 async function mergeAudioAndVideo(videoStream: Readable, audioStream: Readable): Promise<ReadStream> {
     return new Promise((resolve, reject) => {
@@ -56,11 +55,8 @@ async function mergeAudioAndVideo(videoStream: Readable, audioStream: Readable):
 }
 
 /**
- * Merges video and audio streams.
- * @param video Readable video stream
- * @param audio Readable audio stream
- * @param title Video Title
- * @returns merged video stream
+ * @param audioStream Readable audio stream
+ * @returns converted audio stream
  */
 async function convertAudioStream(audioStream: Readable, bitrate: number, durationSec: number): Promise<ReadStream> {
     return new Promise((resolve, reject) => {
