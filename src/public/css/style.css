@@ -1,0 +1,132 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    min-width: 700px;
+}
+
+.primary-container {
+    background-color: #202225;
+    width: 100%;
+    height: 100%;
+    display: grid;
+    align-items: center;
+    justify-items: center;
+}
+
+.secondary-container {
+    width: 100%;
+    max-width: 1900px;
+}
+
+.download-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 30px;
+}
+
+.info-container {
+    padding: 10px;
+    border-radius: 15px;
+    color: white;
+}
+
+.usage {
+    display: grid;
+    align-items: center;
+    justify-content: space-around;
+    gap: 10px;
+    padding: 30px;
+}
+
+.disclamer {
+    padding: 30px;
+}
+
+.clearBtn {
+    border-color: transparent;
+    position: absolute;
+    z-index: 1;
+    background-color: transparent;
+    margin-left: -193px;
+    margin-top: 10px;
+    font-weight: bold;
+    font-size: 16px;
+    color:#70757e;
+    cursor: pointer;
+}
+
+input {
+    position: relative;
+    display: inline-block;
+    font-size: 20px;
+    box-sizing: border-box;
+    transition: 0.3s ease;
+}
+
+input[type="text"] {
+    background: #40444B;
+    color: white;
+    width: 600px;
+    height: 50px;
+    border: none white;
+    outline: none;
+    padding: 0 35px 0px 19px;
+    border-radius: 25px 0 0 25px;
+}
+
+input[type="submit"] {
+    position: relative;
+    border-radius: 0 25px 25px 0;
+    left: -5px;
+    width: 150px;
+    height: 50px;
+    border: none;
+    outline: none;
+    padding: 0 25px;
+    background: #FF0000;
+    color: white;
+}
+
+input[type="submit"]:hover {
+    background-color: #be0000;
+    cursor: pointer;
+}
+
+#error {
+    padding-left: 10px;
+    color: #FF0000;
+}
+
+.search-form {
+    transition: 0.3s ease;
+}
+
+ol li{
+    padding: 5px;
+}
+
+/* Scrollbar */
+* {
+    scrollbar-width: none;
+    scrollbar-color: #313030 #202123;
+}
+
+*::-webkit-scrollbar {
+    width: 10px;
+}
+
+*::-webkit-scrollbar-track {
+    background: #202123;
+}
+
+*::-webkit-scrollbar-thumb {
+    background-color: #313030;
+    border-radius: 12px;
+}

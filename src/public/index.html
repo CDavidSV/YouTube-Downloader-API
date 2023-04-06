@@ -5,9 +5,44 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./css/style.css">
-    <title>YouTube Downlaoder</title>
+    <title>YouTube Downloader</title>
 </head>
 <body>
+    <div class="primary-container">
+        <div class="secondary-container">
+            <div class="download-container">
+                <div class="search-bar">
+                    <h1 style="color: white;">Youtube Video Downloader</h1>
+                    <form id="search-form" method="get" action="/">
+                        <input id="link" type="text" name="" placeholder="Youtube link goes here...">
+                        <input id="submit-button" type="submit" name="" value="Search">  
+                        <button class="clearBtn" id="clear" type="button">&#10005;</button>
+                        <p id="error"></p>
+                    </form> 
+                </div>
+                <div class="result">
+
+                </div>
+            </div>
+            <div class="info-container">
+                <div class="usage">
+                    <h1 style="text-align: center;">How To Use</h1>
+                    <img src="" alt="">
+                    <ol>
+                        <li>Copy any youtube video link.</li>
+                        <li>Paste the link in the search bar.</li>
+                        <li>Choose between video or audio options.</li>
+                        <li>Select the desired quality for the download.</li>
+                        <li>Click <strong>download.</strong></li>
+                    </ol>
+                </div>
+                <div class="disclamer">
+                    <h1 style="text-align: center;">Disclamer</h1>
+                    <p style="text-align: center;">This application was made purely for educational purposes and is not intended for use in downloading copyrighted material. Please note that using this application to download videos from YouTube may violate the terms of service for the website and may be considered copyright infringement. It is the user's responsibility to ensure that they are not breaking any laws or terms of service by using this application. I do not endorse or condone the unauthorized downloading of copyrighted material and cannot be held responsible for any legal consequences that may arise as a result of using this application. By using this application, you acknowledge that you understand and accept these risks and agree to use the application at your own discretion.</p>
+                </div>
+            </div>
+        </div>
+    </div>
     <script src="./js/main.js"></script>
 </body>
 </html>

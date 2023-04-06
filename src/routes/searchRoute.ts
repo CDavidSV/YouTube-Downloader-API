@@ -2,7 +2,7 @@ import router from './router';
 import ytdl from 'ytdl-core';
 
 type videoData = {resolution: string, format: string, mime: string | undefined, bitrate: number | undefined, hasAudio: boolean, audioBitrate: number | undefined, fps: number | undefined, itag: number, size: string};
-type audioData = {bitrate: number | undefined, format: string, itag: number, codec: string | undefined, size: string};
+type audioData = {bitrate: number, format: string, itag: number, codec: string | undefined, size: string};
 type videoResult = {title: string, author: string, authorUrl: string, duration: string, thumbnail: string, videoContainer: videoData[], audioContainer: audioData[]}
 
 router.get('/search', async (req, res) => {
@@ -14,6 +14,11 @@ router.get('/search', async (req, res) => {
     const info = await ytdl.getInfo(queryUrl);
     const videoWithAudio = ytdl.filterFormats(info.formats, 'video');
     const audioOnly = ytdl.filterFormats(info.formats, 'audioonly');
+
+    // Check if the video is live.
+    if (info.videoDetails.isLiveContent) {
+        return res.status(400).send({ status: 'Invalid Url' });
+    }
 
     // Generate the response.
     const result = {
@@ -38,12 +43,18 @@ router.get('/search', async (req, res) => {
         videoContainer.push({ resolution: video.qualityLabel, format: video.container, mime: video.mimeType, bitrate: video.bitrate, hasAudio: audio, audioBitrate: video.audioBitrate, fps: video.fps, itag: video.itag, size: video.contentLength})
     }
     for (let audio of audioOnly) {
-        audioContainer.push({bitrate: audio.audioBitrate, format: audio.container, itag: audio.itag, codec: audio.audioCodec, size: audio.contentLength})
+        if (audio.audioBitrate) {
+            audioContainer.push({bitrate: audio.audioBitrate, format: audio.container, itag: audio.itag, codec: audio.audioCodec, size: audio.contentLength})
+        }
     }
 
-    // Convert to json and send.
+    // Sort video array based on quality and audio array based on bitrate, then add to the result object.
+    videoContainer.sort((obj1, obj2) => parseInt(obj1.resolution) - parseInt(obj2.resolution));
+    audioContainer.sort((obj1, obj2) => obj1.bitrate - obj2.bitrate);
     result.videoContainer = videoContainer;
     result.audioContainer = audioContainer;
+
+    // Convert to json and send.
     const jsonString = JSON.stringify(result);
     res.send(jsonString);
 });
