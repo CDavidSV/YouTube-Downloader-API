@@ -14,14 +14,22 @@
                 <div class="search-bar">
                     <h1 style="color: white;">Youtube Video Downloader</h1>
                     <form id="search-form" method="get" action="/">
-                        <input id="link" type="text" name="" placeholder="Youtube link goes here...">
-                        <input id="submit-button" type="submit" name="" value="Search">  
-                        <button class="clearBtn" id="clear" type="button">&#10005;</button>
+                        <input id="link" type="text" placeholder="Youtube link goes here...">
+                        <input id="submit-button" type="submit" value="Search" onclick="searchVideo(event)">  
+                        <button class="clearBtn" id="clear" type="button" onclick="clearBtn()">&#10005;</button>
                         <p id="error"></p>
                     </form> 
                 </div>
                 <div class="result">
-
+                    <div class="video disabled">
+                        <img class="thumbnail" src="" alt="thumbnail">
+                        <div class="video-metadata">
+                            <a style="text-decoration: none; color: white; font-weight: bold;" href="" class="title"></a>
+                            <a style="text-decoration: none; color: lightgray;" href="" class="author"></a>
+                            <p style="margin: 0%; color: lightgray;" class="duration"></p>
+                        </div>
+                    </div>
+                    <div id="loader" class="lds-facebook disabled"><div></div><div></div><div></div></div>
                 </div>
             </div>
             <div class="info-container">

@@ -5,6 +5,38 @@ type videoData = {resolution: string, format: string, mime: string | undefined, 
 type audioData = {bitrate: number, format: string, itag: number, codec: string | undefined, size: string};
 type videoResult = {title: string, author: string, authorUrl: string, duration: string, thumbnail: string, videoContainer: videoData[], audioContainer: audioData[]}
 
+/**
+ * Converts seconds to a valid HH:MM:SS time format.
+ * @param timestamp time value in seconds.
+ */
+function convertTime(timestamp: number) {
+    const hours = Math.floor(timestamp / 3600);
+    const minutes = Math.floor(timestamp / 60 % 60);
+    const seconds = Math.floor(timestamp % 60);
+
+    let timeStr = '';
+
+    if (hours > 0) {
+        timeStr += `${hours}:`;
+    } else {
+        timeStr += `00:`;
+    }
+
+    if (minutes < 10) {
+        timeStr += `0${minutes}:`
+    } else {
+        timeStr += `${minutes}:`
+    }
+
+    if (seconds < 10) {
+        timeStr += `0${seconds}`
+    } else {
+        timeStr += `${seconds}`
+    }
+
+    return timeStr;
+}
+
 router.get('/search', async (req, res) => {
     const queryUrl: any = req.query.url;
     if (!queryUrl) return res.status(400).send({ status: 'No url' });
@@ -25,8 +57,8 @@ router.get('/search', async (req, res) => {
         title: info.videoDetails.title,
         author: info.videoDetails.author.name,
         authorUrl: info.videoDetails.author.channel_url,
-        duration: info.videoDetails.lengthSeconds,
-        thumbnail: info.videoDetails.thumbnails[0].url,
+        duration: convertTime(parseInt(info.videoDetails.lengthSeconds) - 1),
+        thumbnail: info.videoDetails.thumbnails[info.videoDetails.thumbnails.length - 1].url,
         videoContainer: [],
         audioContainer: []
     } as videoResult
@@ -49,8 +81,8 @@ router.get('/search', async (req, res) => {
     }
 
     // Sort video array based on quality and audio array based on bitrate, then add to the result object.
-    videoContainer.sort((obj1, obj2) => parseInt(obj1.resolution) - parseInt(obj2.resolution));
-    audioContainer.sort((obj1, obj2) => obj1.bitrate - obj2.bitrate);
+    videoContainer.sort((obj1, obj2) => parseInt(obj2.resolution) - parseInt(obj1.resolution));
+    audioContainer.sort((obj1, obj2) => obj2.bitrate - obj1.bitrate);
     result.videoContainer = videoContainer;
     result.audioContainer = audioContainer;
 

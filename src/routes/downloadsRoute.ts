@@ -96,38 +96,6 @@ function verifyName(fileName: string) {
     return encodeURIComponent(fileName);
 }
 
-/**
- * Converts seconds to a valid HH:MM:SS time format.
- * @param timestamp time value in seconds.
- */
-function convertTime(timestamp: number) {
-    const hours = Math.floor(timestamp / 3600);
-    const minutes = Math.floor(timestamp / 60 % 60);
-    const seconds = Math.floor(timestamp % 60);
-
-    let timeStr = '';
-
-    if (hours > 0) {
-        timeStr += `${hours}:`;
-    } else {
-        timeStr += `00:`;
-    }
-
-    if (minutes < 10) {
-        timeStr += `0${minutes}:`
-    } else {
-        timeStr += `${minutes}:`
-    }
-
-    if (seconds < 10) {
-        timeStr += `0${seconds}`
-    } else {
-        timeStr += `${seconds}`
-    }
-
-    return timeStr;
-}
-
 // Shows the percentage completed for the current operation.
 function progressBar(progress: number) {
     let progressBar: string = 'Downloading Video: \n [';
