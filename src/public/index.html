@@ -20,8 +20,8 @@
                         <p id="error"></p>
                     </form> 
                 </div>
-                <div class="result">
-                    <div class="video disabled">
+                <div class="video disabled">
+                    <div class="video-container">
                         <img class="thumbnail" src="" alt="thumbnail">
                         <div class="video-metadata">
                             <a style="text-decoration: none; color: white; font-weight: bold;" href="" class="title"></a>
@@ -29,8 +29,33 @@
                             <p style="margin: 0%; color: lightgray;" class="duration"></p>
                         </div>
                     </div>
-                    <div id="loader" class="lds-facebook disabled"><div></div><div></div><div></div></div>
+                    <div style="width: 100%;" class="downloads">
+                        <div class="tabs">
+                            <button class="tab-btn selected" onclick="selectTab(event)">Video</button>
+                            <button class="tab-btn" onclick="selectTab(event)">Audio</button>
+                        </div>
+                        <div class="details">
+                            <table class="video-table">
+                                <tr>
+                                    <th>Resolution</th>
+                                    <th>Format</th>
+                                    <th>Size</th>
+                                    <th>Has Audio</th>
+                                    <th>Download</th>
+                                </tr>
+                            </table>
+                            <table class="audio-table disabled">
+                                <tr>
+                                    <th>Format</th>
+                                    <th>Size</th>
+                                    <th>Bitrate</th>
+                                    <th>Download</th>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
                 </div>
+                <div id="loader" class="lds-facebook disabled"><div></div><div></div><div></div></div>
             </div>
             <div class="info-container">
                 <div class="usage">

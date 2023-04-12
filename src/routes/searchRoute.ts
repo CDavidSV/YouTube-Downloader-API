@@ -76,7 +76,7 @@ router.get('/search', async (req, res) => {
     }
     for (let audio of audioOnly) {
         if (audio.audioBitrate) {
-            audioContainer.push({bitrate: audio.audioBitrate, format: audio.container, itag: audio.itag, codec: audio.audioCodec, size: audio.contentLength})
+            audioContainer.push({bitrate: audio.audioBitrate, format: 'mp3', itag: audio.itag, codec: audio.audioCodec, size: audio.contentLength})
         }
     }
 

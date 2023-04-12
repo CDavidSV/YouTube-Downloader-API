@@ -6,10 +6,10 @@ html, body {
     width: 100%;
     height: 100%;
     min-width: 700px;
+    background-color: #202225;
 }
 
 .primary-container {
-    background-color: #202225;
     width: 100%;
     height: 100%;
     display: grid;
@@ -128,23 +128,97 @@ ol li{
 
 .video {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     gap: 18px;
     width: 100%;
     max-width: 760px;
+}
+
+.video-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    gap: 20px;
 }
 
 .video-metadata {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    width: 100%;
     gap: 9px;
 }
 
 .video.disabled {
     position: absolute;
     visibility: hidden;
+}
+
+.tabs {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: row;
+}
+
+.tab-btn {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: white;
+    padding: 10px;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.tab-btn.selected {
+    transition: none;
+    border-bottom: solid 3px white;
+}
+
+.tab-btn:hover {
+    background-color:#35383d;
+}
+
+.download-btn {
+    border: none;
+    width: 100%;
+    background-color: #FF0000;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: ease 0.3s;
+}
+
+.download-btn:hover {
+    background-color: #be0000;
+}
+
+/* Tables */
+table {
+    margin-top: 10px;
+    color: white;
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+table.disabled {
+    position: absolute;
+    visibility: hidden;
+}
+
+td, th {
+    border: 1px solid #dddddd;
+    text-align: center;
+    padding: 8px;
+}
+
+tr:nth-child(even) {
+    background-color: #373636;
 }
 
 /* Scrollbar */
