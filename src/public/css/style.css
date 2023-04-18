@@ -154,6 +154,7 @@ ol li{
 
 .video.disabled {
     position: absolute;
+    display: none;
     visibility: hidden;
 }
 
@@ -243,13 +244,13 @@ tr:nth-child(even) {
 /* Loader */
 .lds-facebook {
     display: inline-block;
-    position: relative;
+    top: 170px;
+    position: absolute;
     width: 80px;
     height: 80px;
 }
 
 .lds-facebook.disabled {
-    position: absolute;
     visibility: hidden;
 }
 

@@ -27,14 +27,23 @@ function clearBtn() {
     linkInput.value = "";
 }
 
+function clearTable(table) {
+    for (var i = table.rows.length - 1; i > 0; i--) {
+        table.deleteRow(i);
+    }
+}
+
 // fills the data for the video from the api.
 function fillVideoData(data) {
+    // Remove all rows from the tables except the header row.
+    clearTable(videoTable);
+    clearTable(audioTable);
+
     videoData.parentElement.parentElement.classList.remove('disabled'); // Sho data div. 
     videoData.previousElementSibling.src = data.thumbnail;
     videoData.children[0].innerText = data.title;
     videoData.children[1].innerText = data.author;
     videoData.children[2].innerText = data.duration;
-    loaders[0].classList.add('disabled'); // Hide loader.
 
     // Populate tables with the video and audio data.
     data.videoContainer.forEach(item => {
@@ -79,7 +88,7 @@ function selectTab(e) {
         e.srcElement.classList.add('selected');
     });
 
-    if (selectedTab === 'video') {
+    if (e.srcElement.id === "audio") {
         selectedTab = 'audio';
         videoTable.classList.add('disabled');
         audioTable.classList.remove('disabled');
@@ -95,7 +104,7 @@ function searchVideo(e) {
     e.preventDefault();
     if (!searchAllowed) return;
 
-    videoData.parentElement.classList.add('disabled');
+    videoData.parentElement.parentElement.classList.add('disabled');
 
     // Verify link
     const ytRegex = /http(?:s?):\/\/(?:www\.)?youtu(?:be\.com\/watch\?v=|\.be\/)([\w\-\_]*)(&(amp;)?‌​[\w\?‌​=]*)?/g;
@@ -105,16 +114,20 @@ function searchVideo(e) {
         return;
     }
 
-    // Clear any error, update style classes, set the cooldown.
+    // Clear any error, update style classes.
     errorMsg.innerText = '';
     linkInput.classList.remove('active');
     searchBtn.classList.add('disabled');
     loaders[0].classList.remove('disabled');
     searchAllowed = false;
-    searchTimeout = setTimeout(clearSearchTimeout, 5000);
 
     // Make a request to search for the video.
     fetch(`${apiUrl}/search?url=${linkInput.value}`).then(response => response.json())
-    .then(data => fillVideoData(data))
+    .then(data => {
+        fillVideoData(data);
+        searchTimeout = setTimeout(clearSearchTimeout, 5000);
+        loaders[0].classList.add('disabled'); // Hide loader.
+    })
     .catch((error) => errorMsg.innerText = 'Error: An error ocurred on our side, please try again later.' + error);
+    
 }
