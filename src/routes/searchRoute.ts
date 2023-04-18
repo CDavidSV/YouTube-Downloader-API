@@ -68,6 +68,7 @@ router.get('/search', async (req, res) => {
     const audioContainer: audioData[] = [];
     for (let video of videoWithAudio) {
         let audio: boolean = video.hasAudio;
+        if (!video.contentLength) continue;
         if (video.container === 'mp4') {
             audio = true;
         }
@@ -75,6 +76,7 @@ router.get('/search', async (req, res) => {
         videoContainer.push({ resolution: video.qualityLabel, format: video.container, mime: video.mimeType, bitrate: video.bitrate, hasAudio: audio, audioBitrate: video.audioBitrate, fps: video.fps, itag: video.itag, size: video.contentLength})
     }
     for (let audio of audioOnly) {
+        if (!audio.contentLength) continue;
         if (audio.audioBitrate) {
             audioContainer.push({bitrate: audio.audioBitrate, format: 'mp3', itag: audio.itag, codec: audio.audioCodec, size: audio.contentLength})
         }

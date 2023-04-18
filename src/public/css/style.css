@@ -209,6 +209,7 @@ table {
 
 table.disabled {
     position: absolute;
+    display: none;
     visibility: hidden;
 }
 
@@ -244,8 +245,7 @@ tr:nth-child(even) {
 /* Loader */
 .lds-facebook {
     display: inline-block;
-    top: 170px;
-    position: absolute;
+    position: relative;
     width: 80px;
     height: 80px;
 }
