@@ -128,6 +128,6 @@ function searchVideo(e) {
         searchTimeout = setTimeout(clearSearchTimeout, 5000);
         loaders[0].classList.add('disabled'); // Hide loader.
     })
-    .catch((error) => errorMsg.innerText = 'Error: An error ocurred on our side, please try again later.' + error);
+    .catch(() => errorMsg.innerText = 'Error: An error ocurred on our side, please try again later.');
     
 }
