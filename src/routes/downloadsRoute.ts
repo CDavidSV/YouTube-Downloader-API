@@ -44,8 +44,6 @@ async function mergeAudioAndVideo(videoStream: Readable, audioStream: Readable):
 
         // When merging is completed.
         ffmpegProcess.on('close', () => {
-            console.log("Merging Completed!");
-
             const mergedStream = createReadStream(`./src/downloads/${tempFileName}.mp4`).on('close', () => {
                 unlinkSync(`./src/downloads/${tempFileName}.mp4`);
             });
@@ -78,8 +76,6 @@ async function convertAudioStream(audioStream: Readable, bitrate: number, durati
 
         // When conversion is completed.
         ffmpegProcess.on('close', () => {
-            console.log("Conversion Completed!");
-
             const mergedStream = createReadStream(`./src/downloads/${tempFileName}.mp3`).on('close', () => {
                 unlinkSync(`./src/downloads/${tempFileName}.mp3`);
             });
@@ -116,25 +112,17 @@ function progressBar(progress: number) {
 router.post('/video', async (req, res) => {
     const { itag } = req.body;
     const { url } = req.body;
-    if (!itag || !url) return res.status(400).send({ status: 'failed' });
-    if (!ytdl.validateURL(url)) return res.status(400).send({ status: 'Invalid Url' });
-    
-    // Get info to download video.
-    const info = await ytdl.getInfo(url);
-    let downloadProgress: number;
+    if (!itag || !url) return res.status(400).send({ status: 'failed', title: 'Provide a url and itag' });
+    if (!ytdl.validateURL(url)) return res.status(400).send({ status: 'failed', title: 'Invalid Url' });
+
+    console.log(`[${new Date().toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' }).replace(/,/g, '')}] Request for video download with itag=${itag}`.yellow);
 
     try {
+        // Get info to download video.
+        const info = await ytdl.getInfo(url);
+
         const format = ytdl.chooseFormat(info.formats, { quality: itag });
-        const videoStream = ytdl.downloadFromInfo(info, { filter: 'video', format: format, highWaterMark: 1 << 25 }).on('progress', (length, downloaded, totallength) => {
-            // Calculate download progress.
-            const downloadedProgress = Math.round(downloaded * 100 / totallength);
-            if (downloadProgress !== downloadedProgress) {
-                downloadProgress = downloadedProgress;
-                console.clear();
-                const completion = progressBar(downloadProgress);
-                console.log(completion);
-            };
-        });
+        const videoStream = ytdl.downloadFromInfo(info, { filter: 'video', format: format, highWaterMark: 1 << 25 });
 
         res.header('Content-Disposition', `attachment; filename="${verifyName(info.videoDetails.title)}.${format.container}"`);
         // If its format is webm or it has no audio, then send the downloaded video without merging.
@@ -147,8 +135,8 @@ router.post('/video', async (req, res) => {
             res.header('Content-Type', 'video/webm');
             videoStream.pipe(res);
         }
-    } catch (err) {
-        console.log(err)
+    } catch {
+        console.log(`[${new Date().toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' }).replace(/,/g, '')}] Video Download Failed. url=${url}. itag=${itag}`.red);
         res.status(400).send({ status: 'failed' });
     }
 });
@@ -156,36 +144,26 @@ router.post('/video', async (req, res) => {
 router.post('/audio', async (req, res) => {
     const { itag } = req.body;
     const { url } = req.body;
-    if (!itag || !url) return res.status(400).send({ status: 'failed' });
-    if (!ytdl.validateURL(url)) return res.status(400).send({ status: 'Invalid Url' });
+    if (!itag || !url) return res.status(400).send({ status: 'failed', title: 'Provide a url and itag' });
+    if (!ytdl.validateURL(url)) return res.status(400).send({ status: 'failed', title: 'Invalid Url' });
 
-    // Get info to download video.
-    const info = await ytdl.getInfo(url);
-    const tempFileName = uuidv4();
-    let downloadProgress: number;
+    console.log(`[${new Date().toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' }).replace(/,/g, '')}] Request for audio download with itag=${itag}`.yellow);
 
     try {
+        // Get info to download video.
+        const info = await ytdl.getInfo(url);
         const format = ytdl.chooseFormat(info.formats, { filter: 'audio', quality: itag });
-        const audioStream = ytdl.downloadFromInfo(info, { format: format, highWaterMark: 1 << 25 })
-        .on('progress', (length, downloaded, totallength) => {
-            // Calculate download progress.
-            const downloadedProgress = Math.round(downloaded * 100 / totallength);
-            if (downloadProgress !== downloadedProgress) {
-                downloadProgress = downloadedProgress;
-                console.clear();
-                const completion = progressBar(downloadProgress);
-                console.log(completion);
-            };
-        });
+        const audioStream = ytdl.downloadFromInfo(info, { format: format, highWaterMark: 1 << 25 });
         const convertedStream = await convertAudioStream(audioStream, format.audioBitrate!, parseInt(info.videoDetails.lengthSeconds));
         
         res.set({
-            'Content-Disposition': `attachment; filename="${verifyName(info.videoDetails.title)}.${format.container}"`,
+            'Content-Disposition': `attachment; filename="${verifyName(info.videoDetails.title)}.mp3"`,
             'Content-Type': 'audio/mpeg',
         });
         convertedStream.pipe(res);
 
-    } catch (err) {
+    } catch {
+        console.log(`[${new Date().toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' }).replace(/,/g, '')}] Audio Download Failed. url=${url}. itag=${itag}`.red);
         res.status(400).send({ status: 'failed' });
     }
 });

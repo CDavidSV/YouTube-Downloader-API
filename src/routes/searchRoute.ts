@@ -1,5 +1,7 @@
+import { url } from 'inspector';
 import router from './router';
 import ytdl from 'ytdl-core';
+import { query } from 'express';
 
 type videoData = {resolution: string, format: string, mime: string | undefined, bitrate: number | undefined, hasAudio: boolean, audioBitrate: number | undefined, fps: number | undefined, itag: number, size: string};
 type audioData = {bitrate: number, format: string, itag: number, codec: string | undefined, size: string};
@@ -39,17 +41,26 @@ function convertTime(timestamp: number) {
 
 router.get('/search', async (req, res) => {
     const queryUrl: any = req.query.url;
-    if (!queryUrl) return res.status(400).send({ status: 'No url' });
-    if (!ytdl.validateURL(queryUrl)) return res.status(400).send({ status: 'Invalid Url' });
+    if (!queryUrl) return res.status(400).send({ status: 'failed', title: 'No Url' });
+    if (!ytdl.validateURL(queryUrl)) return res.status(400).send({ status: 'failed', title: 'Invalid Url' });
+
+    console.log(`[${new Date().toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' }).replace(/,/g, '')}] Request for video data received`.yellow);
 
     // Search for the corresponding yt video.
-    const info = await ytdl.getInfo(queryUrl);
+    let info;
+    try {
+       info = await ytdl.getInfo(queryUrl);
+    } catch {
+        console.log(`[${new Date().toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' }).replace(/,/g, '')}] Request for video data failed`.red);
+        return;
+    }
+     
     const videoWithAudio = ytdl.filterFormats(info.formats, 'video');
     const audioOnly = ytdl.filterFormats(info.formats, 'audioonly');
 
     // Check if the video is live.
     if (info.videoDetails.isLiveContent) {
-        return res.status(400).send({ status: 'Invalid Url' });
+        return res.status(400).send({ status: 'failed', title: 'Invalid Url' });
     }
 
     // Generate the response.
@@ -60,7 +71,8 @@ router.get('/search', async (req, res) => {
         duration: convertTime(parseInt(info.videoDetails.lengthSeconds) - 1),
         thumbnail: info.videoDetails.thumbnails[info.videoDetails.thumbnails.length - 1].url,
         videoContainer: [],
-        audioContainer: []
+        audioContainer: [],
+        url: queryUrl
     } as videoResult
 
     // Get data for audio and video streams as well as for audio only streams.
