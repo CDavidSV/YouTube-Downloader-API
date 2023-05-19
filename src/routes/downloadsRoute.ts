@@ -38,10 +38,6 @@ async function mergeAudioAndVideo(videoStream: Readable, audioStream: Readable):
             ],
         });
 
-        // Pipe the video and audio streams into the ffmpeg process
-        videoStream.pipe(ffmpegProcess.stdio[3] as Writable);
-        audioStream.pipe(ffmpegProcess.stdio[4] as Writable);
-
         // When merging is completed.
         ffmpegProcess.on('close', () => {
             const mergedStream = createReadStream(`./src/downloads/${tempFileName}.mp4`).on('close', () => {
@@ -49,6 +45,15 @@ async function mergeAudioAndVideo(videoStream: Readable, audioStream: Readable):
             });
             resolve(mergedStream);
         });
+
+        // Error event handler for the ffmpeg process
+        ffmpegProcess.on('error', (error) => {
+            reject(error);
+        });
+
+        // Pipe the video and audio streams into the ffmpeg process
+        videoStream.pipe(ffmpegProcess.stdio[3] as Writable);
+        audioStream.pipe(ffmpegProcess.stdio[4] as Writable);
     });
 }
 
@@ -71,9 +76,6 @@ async function convertAudioStream(audioStream: Readable, bitrate: number, durati
             ],
         });
 
-        // Pipe the audio stream into the ffmpeg process
-        audioStream.pipe(ffmpegProcess.stdio[3] as Writable);
-
         // When conversion is completed.
         ffmpegProcess.on('close', () => {
             const mergedStream = createReadStream(`./src/downloads/${tempFileName}.mp3`).on('close', () => {
@@ -81,6 +83,14 @@ async function convertAudioStream(audioStream: Readable, bitrate: number, durati
             });
             resolve(mergedStream);
         });
+
+        // Error event handler for the ffmpeg process
+        ffmpegProcess.on('error', (error) => {
+            reject(error);
+        });
+
+        // Pipe the audio stream into the ffmpeg process
+        audioStream.pipe(ffmpegProcess.stdio[3] as Writable);
     });
 }
 
@@ -126,7 +136,7 @@ router.post('/video', async (req, res) => {
 
         res.header('Content-Disposition', `attachment; filename="${verifyName(info.videoDetails.title)}.${format.container}"`);
         // If its format is webm or it has no audio, then send the downloaded video without merging.
-        if (!format.hasAudio || format.container !== 'webm') {
+        if (!format.hasAudio && format.container !== 'webm') {
             const audioStream = ytdl(url, {filter: 'audioonly', quality: 'highestaudio', highWaterMark: 1 << 25 }); // Download audio for merge.
             const merged = await mergeAudioAndVideo(videoStream, audioStream); // merge the video and audio and send them.
             res.header('Content-Type', 'video/mp4');
