@@ -8,6 +8,9 @@ const videoData = document.querySelector('.video-metadata');
 const btns = document.querySelectorAll('.tab-btn');
 const videoTable = document.querySelector('.video-table');
 const audioTable = document.querySelector('.audio-table');
+const overlay = document.querySelector('#overlay');
+const modal = document.querySelector('.modal');
+const progress = document.querySelector('.percentage');
 
 // Other Variables
 const apiUrl = 'http://localhost:3000';
@@ -16,8 +19,6 @@ let searchTimeout;
 let searchAllowed = true;
 let selectedTab = 'video';
 const btnMap = new Map();
-
-// Events
 
 // Functions
 function clearSearchTimeout() {
@@ -141,7 +142,7 @@ function searchVideo(e) {
     fetch(`${apiUrl}/search?url=${videoUrl}`).then(response => response.json())
     .then(data => {
         fillVideoData(data);
-        searchTimeout = setTimeout(clearSearchTimeout, 5000);
+        searchTimeout = setTimeout(clearSearchTimeout, 3000);
         loaders[0].classList.add('disabled'); // Hide loader.
     })
     .catch(() => errorMsg.innerText = 'Error: An error ocurred on our side, please try again later.');
@@ -161,6 +162,8 @@ function downloadVideo(e) {
     let downloadRoute = "";
     options.onlyAudio ? downloadRoute = 'audio' : downloadRoute = 'video';
 
+    openModal();
+    progress.classList.add('start-animation');
     fetch(`${apiUrl}/${downloadRoute}`, {
         method: 'POST',
         body: JSON.stringify(data),
@@ -179,8 +182,6 @@ function downloadVideo(e) {
           // Create a temporary URL for the video blob.
           const videoUrl = URL.createObjectURL(blob);
           
-
-    
           // Create a download link for the video.
           const download = document.createElement('a');
           download.href = videoUrl;
@@ -194,10 +195,24 @@ function downloadVideo(e) {
     
           // Clean up by removing the download link.
           document.body.removeChild(download);
+          progress.classList.remove('start-animation');
+          closeModal();
         });
       })
-    .catch((err) => {
-        console.log(err);
+    .catch(() => {
+        progress.classList.remove('start-animation');
+        closeModal();
+        errorMsg.innerText = 'Error: An error ocurred on our side, please try again later.'
     });
-    return;
+    
+}
+
+function openModal() {
+    modal.classList.add('active');
+    overlay.classList.add('active');
+}
+
+function closeModal() {
+    modal.classList.remove('active');
+    overlay.classList.remove('active');   
 }

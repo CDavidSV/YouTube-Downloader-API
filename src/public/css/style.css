@@ -23,12 +23,13 @@ html, body {
 }
 
 .download-container {
-    width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     margin-bottom: 30px;
+    border: 1px solid #313030;
+    border-radius: 10px;
 }
 
 .info-container {
@@ -196,6 +197,91 @@ ol li{
 
 .download-btn:hover {
     background-color: #be0000;
+}
+
+/* Modal */
+.modal  {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    border-radius: 10px;
+    z-index: 10;
+    color: white;
+    background-color: #212121;
+    width: 500px;
+    max-width: 80%;
+    transition: 0.1s ease;
+    overflow: hidden;
+}
+
+.modal.active {
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.modal-header {
+    padding: 10px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #161515;
+}
+
+.modal-header .title {
+    font-size: 1.25rem;
+    font-weight: bold;
+}
+
+.modal-body {
+    padding: 10px 15px;
+}
+
+#overlay {
+    position: fixed;
+    opacity: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    pointer-events: none;
+    transition: 0.1s ease;
+}
+
+#overlay.active {
+    pointer-events: all;
+    opacity: 1;
+}
+
+.progress-bar {
+    height: 5px;
+    margin-top: 10px;
+    border: 1px solid #565656;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.percentage {
+    transform-origin: top left;
+    display: block;
+    height: 100%;
+    transform: scaleX(0);
+    background-color: red;
+    transition: 0.2s ease;
+}
+
+.start-animation {
+    animation: progress 100s ease 1;
+}
+
+.complete {
+    transform: scaleX(0.9);
+}
+
+@keyframes progress {
+    from {
+        transform: scaleX(0);
+    }
 }
 
 /* Tables */

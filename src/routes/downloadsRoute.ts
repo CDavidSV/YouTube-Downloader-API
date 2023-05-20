@@ -129,6 +129,7 @@ router.post('/video', async (req, res) => {
 
     try {
         // Get info to download video.
+        let downloadProgress: any;
         const info = await ytdl.getInfo(url);
 
         const format = ytdl.chooseFormat(info.formats, { quality: itag });
@@ -140,7 +141,11 @@ router.post('/video', async (req, res) => {
             const audioStream = ytdl(url, {filter: 'audioonly', quality: 'highestaudio', highWaterMark: 1 << 25 }); // Download audio for merge.
             const merged = await mergeAudioAndVideo(videoStream, audioStream); // merge the video and audio and send them.
             res.header('Content-Type', 'video/mp4');
-            merged.pipe(res);
+            if (res.destroyed) {
+                merged.close()
+            } else { 
+                merged.pipe(res);
+            }
         } else {
             res.header('Content-Type', 'video/webm');
             videoStream.pipe(res);
