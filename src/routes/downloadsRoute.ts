@@ -6,10 +6,6 @@ import { spawn } from 'child_process';
 import { ReadStream, createReadStream, unlinkSync } from 'fs';
 import { v4 as uuidv4 } from 'uuid';
 
-const ffmpegPath = require('@ffmpeg-installer/ffmpeg').path;
-import fluent from 'fluent-ffmpeg';
-fluent.setFfmpegPath(ffmpegPath);
-
 /**
  * Merges video and audio streams.
  * @param videoStream Readable video stream
@@ -129,7 +125,6 @@ router.post('/video', async (req, res) => {
 
     try {
         // Get info to download video.
-        let downloadProgress: any;
         const info = await ytdl.getInfo(url);
 
         const format = ytdl.chooseFormat(info.formats, { quality: itag });
