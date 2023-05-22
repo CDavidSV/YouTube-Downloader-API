@@ -7,7 +7,7 @@ An application that allows users to download videos from YouTube. It uses ytdl-c
 - Select from multiple resolutions.
 - Easy to use interface.
 
-![Showcase]()
+![Showcase1](https://github.com/CDavidSV/YouTube-Downloader-API/assets/88672259/a829ae01-788e-4ad5-abcb-518a07e1c7eb)
 
 ## How to run
 
