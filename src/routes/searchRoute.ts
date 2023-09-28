@@ -44,14 +44,12 @@ router.get('/search', async (req, res) => {
     if (!queryUrl) return res.status(400).send({ status: 'failed', title: 'No Url' });
     if (!ytdl.validateURL(queryUrl)) return res.status(400).send({ status: 'failed', title: 'Invalid Url' });
 
-    console.log(`[${new Date().toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' }).replace(/,/g, '')}] Request for video data received`.yellow);
-
     // Search for the corresponding yt video.
     let info;
     try {
        info = await ytdl.getInfo(queryUrl);
-    } catch {
-        console.log(`[${new Date().toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' }).replace(/,/g, '')}] Request for video data failed`.red);
+    } catch (err) {
+        res.status(400).send({ status: 'failed', title: 'Unnable to get video data. Please try again later.' });
         return;
     }
      

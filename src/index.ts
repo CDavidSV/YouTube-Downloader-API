@@ -4,12 +4,14 @@ import search from './routes/searchRoute';
 import download from './routes/downloadsRoute';
 import colors from 'colors';
 import path from 'path';
+import morgan from 'morgan';
 
 colors.enable();
 const app = express();
 const port = 3000;
 
 const staticPath = path.join(__dirname, './public');
+app.use(morgan('dev'));
 app.use(express.static(staticPath));
 app.use(express.json());
 app.use('/', page);

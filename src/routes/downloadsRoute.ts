@@ -121,8 +121,6 @@ router.post('/video', async (req, res) => {
     if (!itag || !url) return res.status(400).send({ status: 'failed', title: 'Provide a url and itag' });
     if (!ytdl.validateURL(url)) return res.status(400).send({ status: 'failed', title: 'Invalid Url' });
 
-    console.log(`[${new Date().toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' }).replace(/,/g, '')}] Request for video download with itag=${itag}`.yellow);
-
     try {
         // Get info to download video.
         const info = await ytdl.getInfo(url);
@@ -146,7 +144,6 @@ router.post('/video', async (req, res) => {
             videoStream.pipe(res);
         }
     } catch {
-        console.log(`[${new Date().toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' }).replace(/,/g, '')}] Video Download Failed. url=${url}. itag=${itag}`.red);
         res.status(400).send({ status: 'failed' });
     }
 });
@@ -156,8 +153,6 @@ router.post('/audio', async (req, res) => {
     const { url } = req.body;
     if (!itag || !url) return res.status(400).send({ status: 'failed', title: 'Provide a url and itag' });
     if (!ytdl.validateURL(url)) return res.status(400).send({ status: 'failed', title: 'Invalid Url' });
-
-    console.log(`[${new Date().toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' }).replace(/,/g, '')}] Request for audio download with itag=${itag}`.yellow);
 
     try {
         // Get info to download video.
@@ -173,7 +168,6 @@ router.post('/audio', async (req, res) => {
         convertedStream.pipe(res);
 
     } catch {
-        console.log(`[${new Date().toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' }).replace(/,/g, '')}] Audio Download Failed. url=${url}. itag=${itag}`.red);
         res.status(400).send({ status: 'failed' });
     }
 });
