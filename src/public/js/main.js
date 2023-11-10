@@ -116,7 +116,7 @@ function selectTab(e) {
 }
 
 // Handles the search button.
-function searchVideo(e) {
+async function searchVideo(e) {
     e.preventDefault();
     if (!searchAllowed) return;
 
@@ -139,13 +139,19 @@ function searchVideo(e) {
     searchAllowed = false;
 
     // Make a request to search for the video.
-    fetch(`${apiUrl}/search?url=${videoUrl}`).then(response => response.json())
-    .then(data => {
-        fillVideoData(data);
-        searchTimeout = setTimeout(clearSearchTimeout, 3000);
-        loaders[0].classList.add('disabled'); // Hide loader.
-    })
-    .catch(() => errorMsg.innerText = 'Error: An error ocurred on our side, please try again later.');
+    try {
+       const data = await fetch(`${apiUrl}/search?url=${videoUrl}`).then(response => {
+        if (response.status == 200) return response.json();
+        else return null;
+       });
+       loaders[0].classList.add('disabled'); // Hide loader.
+       if (!data) return errorMsg.innerText = 'Error: An error ocurred on our side, please try again later.';
+       fillVideoData(data);
+       searchTimeout = setTimeout(clearSearchTimeout, 3000);
+       
+    } catch {
+        errorMsg.innerText = 'Error: An error ocurred on our side, please try again later.'
+    }
 }
 
 // Handles the button clicked to download a video.
